@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Popover , Radio, Input, Modal , message, Button} from 'antd'
 import { SettingOutlined, ArrowDownOutlined, DownOutlined } from '@ant-design/icons'
 import tokenList from '../tokenList.json'
@@ -49,6 +49,17 @@ export default function Swap() {
       </div>
     </>
   )
+
+  useEffect(() => {
+    const getPrices = async (one, two) => {
+      const res = await fetch(`/api/v1/tokenprice?addressOne=${one}&addressTwo=${two}`)
+      const data = await res.json()
+      console.log(data)
+    }
+
+    getPrices(tokenOne.address , tokenTwo.address)
+  },[])
+
   return (
     <>
       <Modal
