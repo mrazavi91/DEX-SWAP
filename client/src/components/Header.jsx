@@ -3,7 +3,8 @@ import Logo from '../moralis-logo.svg'
 import eth from '../eth.svg'
 import { Link } from 'react-router-dom'
 
-export default function Header() {
+export default function Header(props) {
+  const {connect , isConnected, address } = props
   return (
     <header>
 
@@ -28,8 +29,9 @@ export default function Header() {
         </div>
         <div
           className="connectButton"
+          onClick={connect}
         >
-          Connect
+          {isConnected ? (address.slice(0,4) + "..." + address.slice(38)) : 'Connect'}
         </div>
         
       </div>
