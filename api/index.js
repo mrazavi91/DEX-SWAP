@@ -7,6 +7,10 @@ import path from 'path'
 
 dotenv.config()
 
+
+
+const app = express()
+
 Moralis.start({
     apiKey: process.env.MORALIS_KEY 
 })
@@ -15,8 +19,6 @@ Moralis.start({
   })
   .catch((e) => console.log(e))
   const __dirname = path.resolve()
-
-const app = express()
 
 
 app.use('/api/v1', moralisRouter)
