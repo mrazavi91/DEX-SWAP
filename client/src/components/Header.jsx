@@ -1,6 +1,6 @@
 import React from 'react'
-import Logo from '../moralis-logo.svg'
-import eth from '../eth.svg'
+import Logo from '../dog-logo.svg'
+import poly from '../polygan-logo.png'
 import { Link } from 'react-router-dom'
 
 export default function Header(props) {
@@ -24,8 +24,8 @@ export default function Header(props) {
       {/* Right side */}
       <div className="rightH">
         <div className="headerItem">
-          <img src={eth} alt="eth" className='eth' />
-          Ethereum 
+          <img src={poly} alt="eth" className='eth' />
+          Polygon 
         </div>
         <div
           className="connectButton"

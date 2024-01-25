@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import moralisRouter from './routes/moralis.route.js'
 import Moralis from 'moralis'
-Moralis.default
+
 
 dotenv.config()
 

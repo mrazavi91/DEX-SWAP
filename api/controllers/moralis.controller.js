@@ -31,6 +31,7 @@ export const getTokenPrice = async (req, res, next) => {
             address: addressTwo
         })
 
+
         const tokenOnePrice = response1.raw.usdPrice;
         const tokenTwoPrice = response2.raw.usdPrice;
 
@@ -41,6 +42,7 @@ export const getTokenPrice = async (req, res, next) => {
         })
 
     } catch (error) {
+        console.log(error)
         res.status(401).json({ message: error.message })
     }
 }

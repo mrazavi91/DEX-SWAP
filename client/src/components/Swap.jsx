@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Popover , Radio, Input, Modal , message, Button} from 'antd'
 import { SettingOutlined, ArrowDownOutlined, DownOutlined } from '@ant-design/icons'
 import tokenList from '../tokenList.json'
-import { useSendTransaction , useWaitForTransaction } from 'wagmi'
+import { useSendTransaction , useWaitForTransaction} from 'wagmi'
 
 
 
@@ -23,7 +23,7 @@ export default function Swap(props) {
     value: null
   })
 
-  const { data, sendTransaction } = useSendTransaction({
+  const {isLoading, isSuccess,  data, sendTransaction } = useSendTransaction({
     request: {
       from: address,
       to: String(txDetail.to),
@@ -32,9 +32,10 @@ export default function Swap(props) {
     }
   })
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash
-  })
+  // const statusTransaction = useWaitForTransaction({
+  //   hash: data?.hash
+  // })
+  // console.log(statusTransaction)
 
 
   const switchHandler = () => {
@@ -101,7 +102,6 @@ export default function Swap(props) {
       }
       const data = await res.json()
       setPrices(data)
-      console.log(data)
       
     } catch (error) {
       console.log(error)
@@ -112,7 +112,7 @@ export default function Swap(props) {
   const getDexSwap = async () => {
 
     try {
-      const allowance = await fetch(`/swap/v5.2/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`, {
+      const allowance = await fetch(`/swap/v5.2/137/approve/allowance?tokenAddress=${tokenOne.polyAddress}&walletAddress=${address}`, {
         headers: {
            Accept: "application/json",
           Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
@@ -122,7 +122,7 @@ export default function Swap(props) {
       const dataAllowance = await allowance.json()
 
     if (dataAllowance.allowance === "0") {
-      const approve = await fetch(`/swap/v5.2/1/approve/transaction?tokenAddress=${tokenOne.address}`, {
+      const approve = await fetch(`/swap/v5.2/137/approve/transaction?tokenAddress=${tokenOne.polyAddress}`, {
         headers: {
            Accept: "application/json",
           Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
@@ -139,7 +139,7 @@ export default function Swap(props) {
     const performTokenSwap = async () => {
       try {
         const swapToken = await fetch(
-          `swap/v5.2/1/swap?fromTokenAddress=${tokenOne.address}&toTokenAddress=${tokenTwo.address}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`,
+          `swap/v5.2/137/swap?fromTokenAddress=${tokenOne.polyAddress}&toTokenAddress=${tokenTwo.polyAddress}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`,
           {
             headers: {
               Accept: "application/json",
@@ -151,18 +151,18 @@ export default function Swap(props) {
         const dataSwapToken = await swapToken.json();
         setTxDetail(dataSwapToken.tx);
       } catch (error) {
-        console.error('Error performing token swap:', error);
+        console.error('Error performing token swap:', error.message);
         // Handle errors if needed
       }
     };
 
     // Use setTimeout to introduce a 1-second delay before calling the function
-    setTimeout(performTokenSwap, 1000);
+    await performTokenSwap()
 
       
 
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
     
   }
@@ -182,9 +182,9 @@ export default function Swap(props) {
   useEffect(() => {
     messageApi.destroy()
     if (isLoading) {
-      messageAp.open({
+      messageApi.open({
         type: 'loading',
-        content: "Pending ... ⌛" ,
+        content: "Pending ...⌛" ,
         duration: 0
       })
     }
@@ -194,13 +194,13 @@ export default function Swap(props) {
   useEffect(() => {
     messageApi.destroy()
     if (isSuccess) {
-      messageAp.open({
+      messageApi.open({
         type: 'success',
         content: `Transaction Successful 🎉 `,
         duration: 1.5
       })
     } else if (txDetail.to) {
-      messageAp.open({
+      messageApi.open({
         type: 'error',
         content: `Transaction Failed 😢` ,
         duration: 1.5
