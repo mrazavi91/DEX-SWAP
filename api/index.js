@@ -7,18 +7,23 @@ import path from 'path'
 
 dotenv.config()
 
+Moralis.start({
+    apiKey: process.env.MORALIS_KEY 
+})
+  .then(() => {
+    app.listen(3000, ()=> console.log('Server is running on port 3000'))
+  })
+  .catch((e) => console.log(e))
+  const __dirname = path.resolve()
+
 const app = express()
-const __dirname = path.resolve()
+
 
 app.use('/api/v1', moralisRouter)
 
 app.use(express.json())
 
-Moralis.start({
-    apiKey: process.env.MORALIS_KEY 
-}).then(() => {
-    app.listen(3000, ()=> console.log('Server is running on port 3000'))
-}).catch((e)=> console.log(e))
+
 
 
 
