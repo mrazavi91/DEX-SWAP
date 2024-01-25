@@ -1,8 +1,8 @@
 import express from 'express'
-import cors from 'cors'
 import dotenv from 'dotenv'
 import moralisRouter from './routes/moralis.route.js'
 import Moralis from 'moralis'
+import path from 'path'
 
 
 dotenv.config()
@@ -18,3 +18,10 @@ Moralis.start({
 }).then(() => {
     app.listen(3000, ()=> console.log('Server is running on port 3000'))
 }).catch((e)=> console.log(e))
+
+const __dirname = path.resolve()
+
+app.use(express.static(path.join(__dirname, '../client/dist')))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname,'../client/dist/index.html'));
+})
