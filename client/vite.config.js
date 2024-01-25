@@ -7,12 +7,13 @@ export default defineConfig({
     proxy: {
       '/swap': {
         target: "https://api.1inch.dev",
-        secure: false,
-        changeOrigin: true
+        changeOrigin: true,
+        secure: false
       }, 
        '/api': {
         target: "http://localhost:3000",
-        secure: false,
+         secure: false,
+        changeOrigin: true
     }
     }
   },

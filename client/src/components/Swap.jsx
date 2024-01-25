@@ -136,14 +136,14 @@ export default function Swap(props) {
     }
       
       // Define your asynchronous function
-    const performTokenSwap = async () => {
+      const performTokenSwap = async () => {
+      const apiInch = `swap/v5.2/137/swap?fromTokenAddress=${tokenOne.polyAddress}&toTokenAddress=${tokenTwo.polyAddress}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
       try {
-        const swapToken = await fetch(
-          `swap/v5.2/137/swap?fromTokenAddress=${tokenOne.polyAddress}&toTokenAddress=${tokenTwo.polyAddress}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`,
+        const swapToken = await fetch( apiInch, 
           {
             headers: {
               Accept: "application/json",
-              Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
+              Authorization: "NnGlj85V4uDoYWwED8gknInpXIh1EZfW",
             },
           }
         );
