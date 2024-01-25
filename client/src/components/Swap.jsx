@@ -162,7 +162,7 @@ export default function Swap(props) {
       
 
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
     
   }
