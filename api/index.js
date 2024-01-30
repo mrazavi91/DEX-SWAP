@@ -3,13 +3,16 @@ import dotenv from 'dotenv'
 import moralisRouter from './routes/moralis.route.js'
 import Moralis from 'moralis'
 import path from 'path'
+import oneInchRouter from './routes/oneInch.route.js'
 
 
 dotenv.config()
 
 
 
+
 const app = express()
+app.use(express.json())
 
 Moralis.start({
     apiKey: process.env.MORALIS_KEY 
@@ -22,6 +25,7 @@ Moralis.start({
 
 
 app.use('/api/v1', moralisRouter)
+app.use('/api/v1' , oneInchRouter)
 
 app.use(express.json())
 

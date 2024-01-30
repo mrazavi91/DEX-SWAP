@@ -112,52 +112,106 @@ export default function Swap(props) {
   const getDexSwap = async () => {
 
     try {
-      const allowance = await fetch(`/swap/v5.2/137/approve/allowance?tokenAddress=${tokenOne.polyAddress}&walletAddress=${address}`, {
-        headers: {
-           Accept: "application/json",
-          Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
+      // const allowance = await fetch(`/swap/v5.2/137/approve/allowance?tokenAddress=${tokenOne.polyAddress}&walletAddress=${address}`, {
+      //   headers: {
+      //      Accept: "application/json",
+      //     Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
            
-        },
-      })
+      //   },
+      // })
+      const allowance = await fetch(`/api/v1/allowance`,
+        {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json",
+
+          },
+          body:  JSON.stringify({
+            tokenPolyAddress: tokenOne.polyAddress,
+            walletAddress : address
+          }) 
+        })
       const dataAllowance = await allowance.json()
+      console.log(dataAllowance, "datallow")
 
-    if (dataAllowance.allowance === "0") {
-      const approve = await fetch(`/swap/v5.2/137/approve/transaction?tokenAddress=${tokenOne.polyAddress}`, {
-        headers: {
-           Accept: "application/json",
-          Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
+    // if (dataAllowance.allowance === "0") {
+    //   const approve = await fetch(`/swap/v5.2/137/approve/transaction?tokenAddress=${tokenOne.polyAddress}`, {
+    //     headers: {
+    //        Accept: "application/json",
+    //       Authorization: import.meta.env.VITE_ONE_INCH_API_KEY,
            
-        },
-      })
-      const dataApprove = await approve.json()
-      setTxDetail(dataApprove)
-      console.log("not approved")
-      return 
-    }
-      
-      // Define your asynchronous function
-      const performTokenSwap = async () => {
-      const apiInch = `swap/v5.2/137/swap?fromTokenAddress=${tokenOne.polyAddress}&toTokenAddress=${tokenTwo.polyAddress}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
-      try {
-        const swapToken = await fetch( apiInch, 
-          {
-            headers: {
-              Accept: "application/json",
-              Authorization: "NnGlj85V4uDoYWwED8gknInpXIh1EZfW",
-            },
-          }
-        );
+    //     },
+    //   })
+    //   const dataApprove = await approve.json()
+    //   setTxDetail(dataApprove)
+    //   console.log("not approved")
+    //   return
+      // }
+    
+      if (dataAllowance.allowance === "0") {
+        const approve = await fetch(`/api/v1/approve`,
+        {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json",
 
-        const dataSwapToken = await swapToken.json();
-        setTxDetail(dataSwapToken.tx);
-      } catch (error) {
-        console.error('Error performing token swap:', error.message);
-        // Handle errors if needed
+          },
+          body:  JSON.stringify({
+            tokenPolyAddress: tokenOne.polyAddress,
+          }) 
+          })
+         const dataApprove = await approve.json()
+        setTxDetail(dataApprove)
+        console.log("not approved")
+        return
       }
-    };
+      
+    //   // Define your asynchronous function
+    //   const performTokenSwap = async () => {
+    //   const apiInch = `swap/v5.2/137/swap?fromTokenAddress=${tokenOne.polyAddress}&toTokenAddress=${tokenTwo.polyAddress}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
+    //   try {
+    //     const swapToken = await fetch( apiInch,
+    //       {
+    //         headers: {
+    //           Accept: "application/json",
+    //           Authorization: "NnGlj85V4uDoYWwED8gknInpXIh1EZfW",
+    //         },
+    //       }
+    //     );
 
-    // Use setTimeout to introduce a 1-second delay before calling the function
-    await performTokenSwap()
+    //     const dataSwapToken = await swapToken.json();
+    //     setTxDetail(dataSwapToken.tx);
+    //   } catch (error) {
+    //     console.error('Error performing token swap:', error.message);
+    //     // Handle errors if needed
+    //   }
+    // };
+
+    // // Use setTimeout to introduce a 1-second delay before calling the function
+      // await performTokenSwap()
+      const performTokenSwap = async () => {
+        const swapping = await fetch(`/api/v1/swap`,
+        {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json",
+
+          },
+          body:  JSON.stringify({
+            fromTokenAddress: tokenOne.polyAddress,
+            toTokenAddress: tokenTwo.polyAddress,
+            amount : tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0'),
+            fromAddress : address,
+            slippage: slippage 
+          }) 
+        })
+        
+        const dataSwapToken = await swapping.json();
+        setTxDetail(dataSwapToken.tx);
+        
+      }
+      // await performTokenSwap()
+      setTimeout(performTokenSwap, 1000)
 
       
 
